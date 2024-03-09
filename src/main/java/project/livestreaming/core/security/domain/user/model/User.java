@@ -11,6 +11,7 @@ import java.util.Set;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 @AllArgsConstructor
 @Table(name = "tb_user")
 public class User extends BaseEntity {
