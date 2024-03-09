@@ -1,1 +1,9 @@
-
+server:
+  port: 8080
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8080/realms/oauth2/protocol/openid-connect/certs
+#          issuer-uri: http://localhost:8080/realms/oauth2 둘중하나만 하면됨 둘다 설정하면 jwk-set-uri가 우선

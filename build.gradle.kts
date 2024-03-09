@@ -38,6 +38,7 @@ dependencies {
     testImplementation("org.springframework.modulith:spring-modulith-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     implementation("com.h2database:h2")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 }
 
 dependencyManagement {
