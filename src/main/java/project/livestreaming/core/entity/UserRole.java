@@ -1,7 +1,9 @@
-package project.livestreaming.core.security.domain.user.model;
+package project.livestreaming.core.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import project.livestreaming.core.entity.Role;
+import project.livestreaming.core.entity.User;
 
 @Getter
 @Entity

@@ -1,4 +1,4 @@
-package project.livestreaming.core.security.domain.user.dto;
+package project.livestreaming.core.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

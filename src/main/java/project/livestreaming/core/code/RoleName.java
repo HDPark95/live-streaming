@@ -1,4 +1,4 @@
-package project.livestreaming.core.security.domain.user.code;
+package project.livestreaming.core.code;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

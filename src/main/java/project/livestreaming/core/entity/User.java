@@ -1,9 +1,8 @@
-package project.livestreaming.core.security.domain.user.model;
+package project.livestreaming.core.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Comment;
-import project.livestreaming.core.entity.BaseEntity;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -30,7 +29,7 @@ public class User extends BaseEntity {
     @Column(name = "email")
     private String email;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     private Set<UserRole> userRoles = new HashSet<>();
 
     @Builder.Default

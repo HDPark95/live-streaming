@@ -1,12 +1,13 @@
-package project.livestreaming.core.security.domain.user.repository;
+package project.livestreaming.core.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import project.livestreaming.core.security.domain.user.model.User;
+import project.livestreaming.core.entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    Boolean existsByUsername(String username);
     User findByUsername(String username);
 
 
