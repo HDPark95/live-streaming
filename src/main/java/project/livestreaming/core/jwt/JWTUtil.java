@@ -38,9 +38,15 @@ public class JWTUtil {
                 .before(new Date());
     }
 
-    public String createJwt(String username, List<String> roles, Long expiredMs) {
+    public String getCategory(String token) {
+        return getPayload(token)
+                .get("category", String.class);
+    }
+
+    public String createJwt(String category, String username, List<String> roles, Long expiredMs) {
 
         return Jwts.builder()
+                .claim("category", category)
                 .claim("username", username)
                 .claim("roles", roles)
                 .issuedAt(new Date(System.currentTimeMillis()))
