@@ -30,6 +30,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("org.springframework.modulith:spring-modulith-starter-core")
     implementation("org.springframework.modulith:spring-modulith-starter-jpa")
+    //s3
+    implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
+    //FFmpeg
+    implementation("net.bramp.ffmpeg:ffmpeg:0.8.0")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
