@@ -3,3 +3,15 @@ server:
 spring:
   jwt:
     secret: asdqweasdzxcasdqweasdzxcdfswerasdasdasdzxc
+cloud:
+  aws:
+    s3:
+      bucket: live-streaming-service
+    credentials:
+      accessKey: AKIA5K3CSFVITTM7ISZT
+      secretKey: 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
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false

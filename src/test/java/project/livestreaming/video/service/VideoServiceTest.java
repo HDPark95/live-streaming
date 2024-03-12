@@ -1,10 +1,12 @@
 package project.livestreaming.video.service;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -57,5 +59,38 @@ public class VideoServiceTest {
         assertTrue(s3Client.doesObjectExist(bucket, originalName));
 
         // Cleanup is handled in tearDown
+    }
+
+    @Test
+    @DisplayName("잘못된 파일 형식 업로드 시 예외 발생 테스트")
+    public void testUploadVideoThrowsExceptionForInvalidFile() {
+        // Arrange: 잘못된 파일 형식 준비 (텍스트 파일)
+        MultipartFile invalidFile = new MockMultipartFile("file", "invalidVideo.txt", "text/plain", "invalid content".getBytes());
+
+        // Act & Assert: 업로드 시 예외 발생 확인
+        assertThrows(RuntimeException.class, () -> {
+            videoService.uploadVideo(invalidFile);
+        });
+    }
+
+    @Test
+    @DisplayName("내용이 비어 있는 파일 업로드 시 예외 발생 테스트")
+    public void testUploadVideoWithEmptyContent() {
+        // Arrange: 내용이 비어 있는 파일 준비
+        MultipartFile emptyFile = new MockMultipartFile("file", "emptyVideo.mp4", contentType, new byte[0]);
+
+        // Act & Assert: 업로드 시 예외 발생 확인
+        assertThrows(RuntimeException.class, () -> {
+            videoService.uploadVideo(emptyFile);
+        });
+    }
+
+    @Test
+    @DisplayName("null 파일 업로드 시 예외 발생 테스트")
+    public void testUploadVideoWithNullFile() {
+        // Act & Assert: null 파일 업로드 시 예외 발생 확인
+        assertThrows(NullPointerException.class, () -> {
+            videoService.uploadVideo(null);
+        });
     }
 }
