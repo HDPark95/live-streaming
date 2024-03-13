@@ -17,22 +17,20 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.StreamUtils;
-import project.livestreaming.core.dto.CustomUserDetails;
+import project.livestreaming.core.dto.LoginDTO;
+import project.livestreaming.core.service.JwtService;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
-    private final JWTUtil jwtUtil;
     private final ObjectMapper objectMapper;
+    private final JwtService jwtService;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
@@ -42,9 +40,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             throw new AuthenticationServiceException("Authentication Content-Type not supported: " + request.getContentType());
         }
 
-        LoginDto loginDto = null;
+        LoginDTO loginDto = null;
         try {
-            loginDto = objectMapper.readValue(StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8), LoginDto.class);
+            loginDto = objectMapper.readValue(StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8), LoginDTO.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -59,12 +57,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         //token에 담은 검증을 위한 AuthenticationManager로 전달해 검증을 진행함
         return authenticationManager.authenticate(authToken);
     }
-    @Data
-    private static class LoginDto {
-        String username;
-        String password;
-    }
-
     //로그인 성공시 실행하는 메소드 (여기서 JWT를 발급하면 됨)
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
@@ -80,23 +72,16 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         }
 
         //토큰 생성
-        String access = jwtUtil.createJwt("access", username, roles, 600000L);
-        String refresh = jwtUtil.createJwt("refresh", username, roles, 86400000L);
+        String access = jwtService.createJwt("access", username, roles, 600000L);
+        String refresh = jwtService.createJwt("refresh", username, roles, 86400000L);
+
+        //Refresh 토큰 저장
+        jwtService.addRefreshEntity(username, refresh, 86400000L);
 
         //응답 설정
         response.setHeader("access", access);
-        response.addCookie(createCookie("refresh", refresh));
+        response.addCookie(jwtService.createCookie("refresh", refresh));
         response.setStatus(HttpStatus.OK.value());
-    }
-
-    private Cookie createCookie(String key, String value) {
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(24*60*60); // 24시간
-        //cookie.setSecure(true);
-        //cookie.setPath("/");
-        cookie.setHttpOnly(true); // 자바스크립트에서 접근하지 못하도록 XSS 방지 필수
-
-        return cookie;
     }
 
     //로그인 실패시 실행하는 메소드

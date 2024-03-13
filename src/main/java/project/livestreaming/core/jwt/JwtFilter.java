@@ -9,17 +9,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import project.livestreaming.core.dto.CustomUserDetails;
 import project.livestreaming.core.entity.User;
-import project.livestreaming.core.entity.UserRole;
+import project.livestreaming.core.service.JwtService;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,9 +25,9 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
-public class JWTFilter extends OncePerRequestFilter {
+public class JwtFilter extends OncePerRequestFilter {
 
-    private final JWTUtil jwtUtil;
+    private final JwtService jwtService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -46,7 +44,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
         // 토큰 만료 여부 확인, 만료시 다음 필터로 넘기지 않음
         try {
-            jwtUtil.isExpired(accessToken);
+            jwtService.isExpired(accessToken);
         } catch (ExpiredJwtException e) {
 
             //response body
@@ -59,7 +57,7 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         // 토큰이 access인지 확인 (발급시 페이로드에 명시)
-        String category = jwtUtil.getCategory(accessToken);
+        String category = jwtService.getCategory(accessToken);
 
         if (!category.equals("access")) {
 
@@ -73,8 +71,8 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         // username, role 값을 획득
-        String username = jwtUtil.getUsername(accessToken);
-        List<String> roles = jwtUtil.getRole(accessToken);
+        String username = jwtService.getUsername(accessToken);
+        List<String> roles = jwtService.getRole(accessToken);
 
         //userEntity를 생성하여 값 set
         User user = User.builder()

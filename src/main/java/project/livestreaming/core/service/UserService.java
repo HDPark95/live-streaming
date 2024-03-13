@@ -19,7 +19,7 @@ import project.livestreaming.core.repository.UserRoleRepository;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class UserService {
 
     private final UserRepository userRepository;
@@ -28,6 +28,7 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
 
     @PostConstruct
+    @Transactional
     public void initRoleAndUser() {
         Role role = roleRepository.findByName(RoleName.ADMIN);
         if(role == null) {
@@ -53,6 +54,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public User join(JoinDTO joinDTO) {
         String username = joinDTO.getUsername();
         String password = joinDTO.getPassword();
