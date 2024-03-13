@@ -26,7 +26,6 @@ public class Video extends BaseEntity {
     @Column(name = "video_thumbnail_url")
     private String thumbnailUrl;
 
-
     @Builder
     public Video(Long id, String title, String description, String url, String thumbnailUrl) {
         this.id = id;
@@ -34,6 +33,13 @@ public class Video extends BaseEntity {
         this.description = description;
         this.thumbnailUrl = thumbnailUrl;
         this.url = url;
+    }
+
+    public void update(String title, String description, String url, String thumbnailUrl) {
+        this.title = title;
+        this.description = description;
+        this.url = url;
+        this.thumbnailUrl = thumbnailUrl;
     }
 
 }

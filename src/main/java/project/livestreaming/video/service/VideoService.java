@@ -2,17 +2,22 @@ package project.livestreaming.video.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import project.livestreaming.video.domain.Video;
 import project.livestreaming.video.dto.VideoDTO;
+import project.livestreaming.video.dto.VideoMetaDTO;
 import project.livestreaming.video.repository.VideoRepository;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +47,7 @@ public class VideoService {
         s3Client.putObject(bucket, originalName, file.getInputStream(), metadata);
         return s3Client.getUrl(bucket, originalName).toString();
     }
+
     public String uploadThumbnail(File file) throws IOException {
         if (file.length() == 0) {
             throw new RuntimeException("file is empty");
@@ -84,12 +90,36 @@ public class VideoService {
         return thumbnailFile;
     }
 
+    @Transactional
     public void createVideo(VideoDTO videoDTO) throws IOException, InterruptedException {
+
         //비디오 저장
         String url = uploadVideo(videoDTO.getFile());
         videoDTO.setUrl(url);
-        videoDTO.setThumbnailUrl(uploadThumbnail(createThumbnail(videoDTO.getFile())));
+        if(videoDTO.getThumbnailFile() == null) {
+            videoDTO.setThumbnailUrl(uploadThumbnail(createThumbnail(videoDTO.getFile())));
+        }else{
+            File file = new File(Objects.requireNonNull(videoDTO.getThumbnailFile().getOriginalFilename()));
+            videoDTO.getThumbnailFile().transferTo(file);
+            videoDTO.setThumbnailUrl(uploadThumbnail(file));
+        }
+
         videoRepository.save(videoDTO.toEntity());
     }
 
+    public void deleteVideo(Long videoId) {
+        Video video = videoRepository.findById(videoId)
+                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 비디오입니다."));
+
+        video.delete();
+    }
+
+
+    public void updateVideo(Long videoId, VideoMetaDTO videoDTO) throws IOException, InterruptedException{
+        Video video = videoRepository.findById(videoId)
+                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 비디오입니다."));
+
+        String thumbnailUrl = uploadThumbnail(createThumbnail(videoDTO.getThumbnailFile()));
+        video.update(videoDTO.getTitle(), videoDTO.getDescription(), videoDTO.getUrl(), thumbnailUrl);
+    }
 }
