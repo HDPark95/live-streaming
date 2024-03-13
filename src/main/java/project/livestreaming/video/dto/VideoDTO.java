@@ -11,7 +11,7 @@ public class VideoDTO {
     private String description;
     private String url;
     private MultipartFile file;
-
+    private String thumbnailUrl;
     public Video toEntity() {
         if (Strings.isNullOrEmpty(url)){
             throw new IllegalArgumentException("url is empty");
@@ -20,6 +20,7 @@ public class VideoDTO {
                 .title(title)
                 .description(description)
                 .url(url)
+                .thumbnailUrl(thumbnailUrl)
                 .build();
     }
 }

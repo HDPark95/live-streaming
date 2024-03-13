@@ -42,6 +42,18 @@ public class VideoService {
         s3Client.putObject(bucket, originalName, file.getInputStream(), metadata);
         return s3Client.getUrl(bucket, originalName).toString();
     }
+    public String uploadThumbnail(File file) throws IOException {
+        if (file.length() == 0) {
+            throw new RuntimeException("file is empty");
+        }
+        String originalName = file.getName();
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(file.length());
+        metadata.setContentType("image/jpeg");
+
+        s3Client.putObject(bucket, originalName, file);
+        return s3Client.getUrl(bucket, originalName).toString();
+    }
 
     public File createThumbnail(MultipartFile inputFile) throws IOException, InterruptedException {
         // 입력 파일을 임시 디렉토리에 저장합니다.
@@ -65,14 +77,19 @@ public class VideoService {
         Process process = Runtime.getRuntime().exec(cmd);
         process.waitFor(); // FFmpeg 프로세스 완료 대기
 
+        // 임시 디렉토리에 저장된 파일을 삭제합니다.
+        Files.delete(inputFilePath);
+
         // 썸네일 파일 반환
         return thumbnailFile;
     }
 
-    public void createVideo(VideoDTO videoDTO) throws IOException {
+    public void createVideo(VideoDTO videoDTO) throws IOException, InterruptedException {
         //비디오 저장
         String url = uploadVideo(videoDTO.getFile());
         videoDTO.setUrl(url);
+        videoDTO.setThumbnailUrl(uploadThumbnail(createThumbnail(videoDTO.getFile())));
         videoRepository.save(videoDTO.toEntity());
     }
+
 }

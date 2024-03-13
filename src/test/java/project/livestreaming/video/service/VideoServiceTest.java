@@ -16,6 +16,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -92,5 +97,24 @@ public class VideoServiceTest {
         assertThrows(NullPointerException.class, () -> {
             videoService.uploadVideo(null);
         });
+    }
+
+    @Test
+    @DisplayName("썸네일 생성 테스트")
+    public void testCreateThumbnail() throws IOException, InterruptedException {
+        // 임시 파일 생성을 위한 준비
+        byte[] content = Files.readAllBytes(Path.of("src/test/resources/test.mp4"));
+        MultipartFile mockFile = new MockMultipartFile("test.mp4", "test.mp4", "video/mp4", content);
+
+        // 썸네일 생성 테스트 실행
+        File thumbnail = videoService.createThumbnail(mockFile);
+
+        // 검증: 생성된 썸네일이 null이 아니어야 함
+        assertNotNull(thumbnail);
+        // 검증: 생성된 썸네일 파일이 실제로 존재해야 함
+        assertTrue(thumbnail.exists());
+
+        // 임시 파일 정리
+        Files.deleteIfExists(thumbnail.toPath()); // 테스트 후 썸네일 파일 삭제
     }
 }

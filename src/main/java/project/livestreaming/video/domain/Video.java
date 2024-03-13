@@ -23,11 +23,16 @@ public class Video extends BaseEntity {
     @Column(name = "video_url")
     private String url;
 
+    @Column(name = "video_thumbnail_url")
+    private String thumbnailUrl;
+
+
     @Builder
-    public Video(Long id, String title, String description, String url) {
+    public Video(Long id, String title, String description, String url, String thumbnailUrl) {
         this.id = id;
         this.title = title;
         this.description = description;
+        this.thumbnailUrl = thumbnailUrl;
         this.url = url;
     }
 
