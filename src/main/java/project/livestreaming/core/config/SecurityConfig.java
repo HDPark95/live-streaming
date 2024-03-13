@@ -1,7 +1,6 @@
 package project.livestreaming.core.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -18,11 +17,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import project.livestreaming.core.jwt.JWTFilter;
-import project.livestreaming.core.jwt.JWTUtil;
+import project.livestreaming.core.jwt.JwtFilter;
 import project.livestreaming.core.jwt.LoginFilter;
-import project.livestreaming.core.repository.UserRepository;
+import project.livestreaming.core.repository.RefreshRepository;
+import project.livestreaming.core.service.JwtService;
 
 import java.util.Collections;
 
@@ -36,7 +34,7 @@ public class SecurityConfig {
 
     //AuthenticationManager가 인자로 받을 AuthenticationConfiguraion 객체 생성자 주입
     private final AuthenticationConfiguration authenticationConfiguration;
-    private final JWTUtil jwtUtil;
+    private final JwtService jwtService;
     private final ObjectMapper objectMapper;
 
     @Bean
@@ -95,7 +93,7 @@ public class SecurityConfig {
                                 "/",
                                 "/api/v1/user/join",
                                 "/login",
-                                "/api/v1/reissue"
+                                "/api/v1/user/refresh"
                         ).permitAll()
                         .requestMatchers("/api/v1/admin").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
@@ -104,12 +102,15 @@ public class SecurityConfig {
         //로그인 검증 필터 추가 UsernamePasswordAuthenticationFilter 자리에 커스텀 필터 대체
         http.addFilterAt(
                 new LoginFilter(
-                        authenticationManager(authenticationConfiguration),jwtUtil,objectMapper), UsernamePasswordAuthenticationFilter.class
+                        authenticationManager(authenticationConfiguration),
+                        objectMapper,
+                        jwtService
+                ), UsernamePasswordAuthenticationFilter.class
         );
 
         // JWTFILTER 추가 로그인 필터 앞에 넣기
         http.addFilterBefore(
-               new JWTFilter(jwtUtil), LoginFilter.class
+               new JwtFilter(jwtService), LoginFilter.class
         );
 
         //세션 설정
