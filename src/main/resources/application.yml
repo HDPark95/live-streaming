@@ -3,6 +3,9 @@ server:
 spring:
   jwt:
     secret: asdqweasdzxcasdqweasdzxcdfswerasdasdasdzxc
+  data:
+    elasticsearch:
+      uris: http://elasticsearch:9200
 cloud:
   aws:
     s3:
