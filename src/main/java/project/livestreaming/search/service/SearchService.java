@@ -13,7 +13,7 @@ import java.util.List;
 public class SearchService {
     private final VideoElasticRepository videoRepository;
 
-    public List<Video> search(String keyword) {
+    public List<ESVideo> search(String keyword) {
         return videoRepository.findByTitleOrDescription(keyword, keyword);
     }
 

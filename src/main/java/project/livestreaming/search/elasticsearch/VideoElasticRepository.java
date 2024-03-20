@@ -1,10 +1,10 @@
 package project.livestreaming.search.elasticsearch;
 
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
-import project.livestreaming.video.domain.Video;
+import project.livestreaming.search.domain.ESVideo;
 
 import java.util.List;
 
-public interface VideoElasticRepository extends ElasticsearchRepository<Video, String> {
-    List<Video> findByTitleOrDescription(String keyword, String keyword1);
+public interface VideoElasticRepository extends ElasticsearchRepository<ESVideo, String> {
+    List<ESVideo> findByTitleOrDescription(String keyword, String keyword1);
 }
