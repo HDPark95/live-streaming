@@ -11,3 +11,19 @@ services:
       - ./mariadb/conf.d:/etc/mysql/conf.d
       - ./mariadb/data:/var/lib/mysql
     restart: always
+  elasticsearch:
+    image: elasticsearch:8.12.2
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - ./elasticsearch/config:/usr/share/elasticsearch/config
+    networks:
+      - dev
+
+networks:
+  dev:
+    external: true

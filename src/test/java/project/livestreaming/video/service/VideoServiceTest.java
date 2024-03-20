@@ -117,4 +117,5 @@ public class VideoServiceTest {
         // 임시 파일 정리
         Files.deleteIfExists(thumbnail.toPath()); // 테스트 후 썸네일 파일 삭제
     }
+
 }
