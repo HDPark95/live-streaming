@@ -29,6 +29,7 @@ public class User extends BaseEntity {
     @Column(name = "email")
     private String email;
 
+    @Builder.Default
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     private Set<UserRole> userRoles = new HashSet<>();
 

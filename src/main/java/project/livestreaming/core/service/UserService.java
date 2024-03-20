@@ -37,6 +37,15 @@ public class UserService {
                     .build();
             roleRepository.save(role);
         }
+
+        Role uRole = roleRepository.findByName(RoleName.USER);
+        if(uRole == null) {
+            uRole = Role.builder()
+                    .name(RoleName.USER)
+                    .build();
+            roleRepository.save(uRole);
+        }
+
         User user = userRepository.findByUsername("webmaster");
         if(user == null) {
             user = User.builder()

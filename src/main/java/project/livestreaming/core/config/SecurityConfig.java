@@ -16,10 +16,11 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import project.livestreaming.core.jwt.JwtFilter;
 import project.livestreaming.core.jwt.LoginFilter;
-import project.livestreaming.core.repository.RefreshRepository;
+import project.livestreaming.core.jwt.LogoutCustomFilter;
 import project.livestreaming.core.service.JwtService;
 
 import java.util.Collections;
@@ -112,6 +113,11 @@ public class SecurityConfig {
         http.addFilterBefore(
                new JwtFilter(jwtService), LoginFilter.class
         );
+
+        http
+                .addFilterBefore(
+                        new LogoutCustomFilter(jwtService), LogoutFilter.class
+                );
 
         //세션 설정
         http.sessionManagement(

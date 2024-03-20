@@ -2,8 +2,8 @@ import { ReactElement, JSXElementConstructor, ReactNode, ReactPortal, AwaitedRea
 
 export default function Layout(props: { children: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; }){
     return (
-        <form>
+        <html>
             <body>{props.children}</body>
-        </form>
+        </html>
     );
 }
