@@ -2,6 +2,7 @@ package project.livestreaming.search.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import project.livestreaming.search.domain.ESVideo;
 import project.livestreaming.search.elasticsearch.VideoElasticRepository;
 import project.livestreaming.video.domain.Video;
 
@@ -16,7 +17,7 @@ public class SearchService {
         return videoRepository.findByTitleOrDescription(keyword, keyword);
     }
 
-    public void sampleSave(Video video) {
+    public void sampleSave(ESVideo video) {
         videoRepository.save(video);
     }
 }
