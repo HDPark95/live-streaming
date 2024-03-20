@@ -3,6 +3,7 @@ package project.livestreaming.search.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import project.livestreaming.search.domain.ESVideo;
 import project.livestreaming.video.domain.Video;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,11 +21,11 @@ class SearchServiceTest {
     @Test
     void sampleSave() {
         //given
-        Video video = Video.builder()
+        ESVideo video = ESVideo
+                .builder()
+                .videoId(1)
                 .title("title")
                 .description("description")
-                .url("url")
-                .thumbnailUrl("thumbnailUrl")
                 .build();
         //when
         searchService.sampleSave(video);
