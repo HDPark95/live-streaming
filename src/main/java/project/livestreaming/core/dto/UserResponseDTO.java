@@ -17,9 +17,9 @@ public class UserResponseDTO {
 
     public static UserResponseDTO mapToDTO(User user) {
         UserResponseDTO userResponseDTO = new UserResponseDTO();
-        userResponseDTO.username = user.getUsername();
-        userResponseDTO.email = user.getEmail();
-        userResponseDTO.roles = user.getUserRoles().stream().map(userRole -> userRole.getRole().getName()).toList();
+        userResponseDTO.setUsername(user.getUsername());
+        userResponseDTO.setEmail(user.getEmail());
+        userResponseDTO.setRoles(user.getUserRoles().stream().map(userRole -> userRole.getRole().getName()).toList());
         return userResponseDTO;
     }
 }
