@@ -50,4 +50,8 @@ public abstract class BaseEntity {
     @JoinColumn(name="modified_by")
     private Long modifiedBy;
 
+    public void delete() {
+        this.deleted = true;
+    }
+
 }
