@@ -2,7 +2,7 @@ package project.livestreaming.core.dto;
 
 import lombok.Data;
 import project.livestreaming.core.code.RoleName;
-import project.livestreaming.core.entity.User;
+import project.livestreaming.core.domain.User;
 
 import java.util.List;
 

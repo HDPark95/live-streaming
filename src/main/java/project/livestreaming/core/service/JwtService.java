@@ -3,7 +3,6 @@ package project.livestreaming.core.service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import jakarta.annotation.PostConstruct;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -14,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.livestreaming.core.entity.Refresh;
+import project.livestreaming.core.domain.Refresh;
 import project.livestreaming.core.repository.RefreshRepository;
 
 import javax.crypto.SecretKey;
