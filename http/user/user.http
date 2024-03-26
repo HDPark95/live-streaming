@@ -13,8 +13,8 @@ POST {{host}}/login
 Content-Type: application/json
 
 {
- "username" : "{{username}}",
- "password": "{{password}}"
+ "username" : "test1",
+ "password": "1234"
 }
 
 ### 3. 로그아웃

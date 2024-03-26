@@ -2,7 +2,7 @@ package project.livestreaming.core.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import project.livestreaming.core.entity.User;
+import project.livestreaming.core.domain.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
