@@ -33,10 +33,10 @@ const handler = NextAuth({
         })
     ],
     callbacks: {
-        // async signIn({ user, account, profile, email, credentials }) {
-        //     console.log(user);
-        //   return true;
-        // },
+        async signIn({ user, account, profile, email, credentials }) {
+            console.log(user);
+          return true;
+        },
         async jwt({ token, user, account, profile, isNewUser }) {
             return {...token, ...user}
         },
