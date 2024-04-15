@@ -7,45 +7,52 @@ const handler = NextAuth({
         CredentialsProvider({
             name: 'credentials',
             async authorize(credentials, req) {
+                console.log("call authorize")
                 console.log(credentials);
-                // const res = await fetch("/your/endpoint", {
-                //     method: 'POST',
-                //     body: JSON.stringify(credentials),
-                //     headers: { "Content-Type": "application/json" }
-                // })
-                //const user = await res.json()
+                try {
+                    const res = await fetch("/login", {
+                        method: 'POST',
+                        body: JSON.stringify(credentials),
+                        headers: {"Content-Type": "application/json"}
+                    })
+                    const user = await res.json()
 
-                // if (res.ok && user) {
-                //     return user
-                // }
+                    console.log("user = ", user)
 
-                let newVar = {
-                    id: '1',
-                    name: 'John Doe',
-                    email: 'n9qjv@example.com'
-                };
-                return newVar
+                    if (res.ok && user) {
+                        return user
+                    } else {
+                        throw new Error("Login failed"); // 로그인 실패 처리
+                    }
+                } catch (error) {
+                    console.error(error);
+                    throw new Error("Authentication error");
+                }
             },
             credentials: {
-                username: { label: "Username", type: "text", placeholder: "jsmith" },
-                password: { label: "Password", type: "password" }
+                username: {label: "Username", type: "text", placeholder: "username"},
+                password: {label: "Password", type: "password"}
             }
         })
     ],
     callbacks: {
-        async signIn({ user, account, profile, email, credentials }) {
-            console.log(user);
-          return true;
+        async signIn({user, account, profile, email, credentials}) {
+            console.log("call signIn user = ", user);
+            if (user) {
+                return true
+            }
+            return false;
         },
-        async jwt({ token, user, account, profile, isNewUser }) {
+        async jwt({token, user, account, profile, isNewUser}) {
+            console.log("call jwt");
             return {...token, ...user}
         },
-        async session({ session, token }) {
-            console.log(123);
+        async session({session, token}) {
+            console.log("call session");
             return session;
         }
     }
 })
 
 
-export { handler as GET, handler as POST }
+export {handler as GET, handler as POST}
