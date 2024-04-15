@@ -1,11 +1,23 @@
 server:
   port: 8080
 spring:
+  batch:
+    jdbc:
+      initialize-schema: always #embedded가 기본값 RDBMS를 사용
   jwt:
     secret: asdqweasdzxcasdqweasdzxcdfswerasdasdasdzxc
   data:
     elasticsearch:
       uris: http://elasticsearch:9200
+    jpa:
+        hibernate:
+            ddl-auto: update
+        show-sql: true
+    datasource:
+        url: jdbc:mariadb://localhost:3306/livestreaming?useSSL=false
+        username: root
+        password: livestreaming
+        driver-class-name: org.mariadb.jdbc.Driver
 cloud:
   aws:
     s3:
