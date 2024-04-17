@@ -3,8 +3,7 @@ package project.livestreaming.video.domain;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import org.springframework.data.elasticsearch.annotations.Document;
-import project.livestreaming.core.entity.BaseEntity;
+import project.livestreaming.core.domain.BaseEntity;
 
 @Entity
 @Table(name = "tb_video")
