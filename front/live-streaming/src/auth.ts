@@ -8,53 +8,50 @@ export const {
     auth,
     signIn,
 } = NextAuth({
-    pages: {
-        signIn: "/login",
+    pages:{
+      signIn : '/login',
     },
-    callbacks: {
-        jwt({ token}) {
-            return token;
-        },
-        session({ session, newSession, user}) {
-            return session;
-        }
-    },
+    secret: process.env.NEXTAUTH_SECRET,
     providers: [
         CredentialsProvider({
-            credentials: {
-                username: { label: "Username", type: "text", placeholder: "username" },
-                password: {  label: "Password", type: "password" },
+            name: 'credentials',
+            async authorize(credentials, req) {
+                if (!credentials) {
+                    throw new Error("No credentials provided");
+                }
+                try {
+                    const res = await fetch("http://localhost:8080/login", {
+                        method: 'POST',
+                        body: JSON.stringify(credentials),
+                        headers: {"Content-Type": "application/json"}
+                    })
+                    console.log(res);
+                    if (!res.ok) {
+                        throw new Error("Login failed");
+                    }
 
+                    // 쿠키나 헤더에서 필요한 정보를 추출하여 사용자 객체를 생성
+                    const accessToken = res.headers.get('access'); // 예시로 access 토큰 추출
+                    const user = {
+                        accessToken,
+                        username: credentials.username, // 예시로 사용자 이름 설정
+                        id: credentials.username, // 예시로 사용자 이름 설정
+                    };
+                    console.log("authentication", user);
+                    return {
+                        id: 1,
+                        name: credentials.username,
+                        image: null,
+                    };
+                } catch (error) {
+                    console.error(error);
+                }
             },
-            async authorize(credentials) {
-                const authResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/login`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        id: credentials?.username,
-                        password: credentials?.password,
-                    }),
-                })
-                let setCookie = authResponse.headers.get('Set-Cookie');
-
-                if (setCookie) {
-                    const parsed = cookie.parse(setCookie);
-                    cookies().set('connect.sid', parsed['connect.sid'], parsed); // 브라우저에 쿠키를 심어주는 것
-                }
-                if (!authResponse.ok) {
-                    return null
-                }
-
-                const user = await authResponse.json()
-                return {
-                    email: user.id,
-                    name: user.nickname,
-                    image: user.image,
-                    ...user,
-                }
-            }
-        }),
-    ]
-});
+        })
+    ],
+    callbacks: {
+        async session({ session, user, token }) {
+            return session
+        },
+    }
+})

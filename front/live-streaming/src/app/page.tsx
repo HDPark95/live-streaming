@@ -1,23 +1,20 @@
 // page.tsx
 
 import { useSession } from 'next-auth/react';
+import {auth} from "@/auth";
+import Link from "next/link";
 
-export default function Home() {
-    const { data: session, status } = useSession();
-
-    console.log("session.status",session, status);
-    if (status === 'loading') {
-        return <div>Loading...</div>;
-    }
-
-    if (!session || !session.user) {
-        return <div>You are not logged in</div>;
+export default async function Home() {
+    const data = await auth();
+    if (!data) {
+        return <div><Link href="/login">로그인</Link>You are not logged in</div>;
     }
 
     return (
         <div>
+
             <h1>Hello, Next.js!</h1>
-            <p>Your User ID is: {session.user.name}</p>
+            <p>Your User ID is: {data.user.name}</p>
         </div>
     );
 }
