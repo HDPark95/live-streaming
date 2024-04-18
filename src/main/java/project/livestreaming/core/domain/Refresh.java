@@ -1,4 +1,4 @@
-package project.livestreaming.core.entity;
+package project.livestreaming.core.domain;
 
 import jakarta.persistence.*;
 import lombok.*;

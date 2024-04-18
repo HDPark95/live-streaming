@@ -13,7 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import project.livestreaming.core.dto.CustomUserDetails;
-import project.livestreaming.core.entity.User;
+import project.livestreaming.core.domain.User;
 import project.livestreaming.core.service.JwtService;
 
 import java.io.IOException;

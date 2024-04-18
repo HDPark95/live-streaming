@@ -7,11 +7,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.livestreaming.core.dto.CustomUserDetails;
-import project.livestreaming.core.entity.User;
-import project.livestreaming.core.entity.UserRole;
+import project.livestreaming.core.domain.User;
 import project.livestreaming.core.repository.UserRepository;
-
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
