@@ -9,11 +9,12 @@ export const metadata: Metadata = {
   description: "Clone Youtube",
 };
 
-import type { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import Head from 'next/head';
 import AuthSession from "@/app/_component/AuthSession";
 import {ThemeProvider} from "@/providers/themeProvider";
 import Sidebar from "@/components/Sidebar";
+import {MSWComponent} from "@/app/_component/MSWComponent";
 
 interface RootLayoutProps {
   children: ReactNode;
@@ -23,17 +24,16 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
       <html lang="en">
       <body className={inter.className}>
-          <ThemeProvider
-              attribute="class"
-              defaultTheme="dark"
-              enableSystem
-              disableTransitionOnChange
-          >
-          <Sidebar>
-              <AuthSession>
-              {children}
-              </AuthSession>
-          </Sidebar>
+      <MSWComponent />
+      <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+      >
+          <AuthSession>
+          {children}
+          </AuthSession>
       </ThemeProvider>
       </body>
       </html>

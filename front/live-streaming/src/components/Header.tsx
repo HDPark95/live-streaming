@@ -2,13 +2,16 @@ import PagePadding from "@/components/PagePadding";
 import UserIcon from "@/components/UserIcon";
 import {FaChromecast} from "react-icons/fa";
 import {FiSearch} from "react-icons/fi";
+import {auth} from "@/auth";
+import Link from "next/link";
 
 
-const Header = ({ children }: { children: React.ReactNode }) => {
+const Header = async ({ children }: { children: React.ReactNode }) => {
+    const session = await auth();
+
     return (
         <header className="relative overflow-y-auto w-full h-full">
             <section className=" absolute top-0 w-full">
-
             </section>
             {/* searchSection */}
             <section className="sticky">
@@ -21,8 +24,12 @@ const Header = ({ children }: { children: React.ReactNode }) => {
                             <input className="h-full w-full bg-transparent " placeholder="검색" type="text"/>
                         </article>
                         <article className="flex flex-row gap-6 items-center">
-                            <FaChromecast size={26}/>
-                            <UserIcon/>
+                            { session ? <>
+                                        <FaChromecast size={26}/>
+                                        <UserIcon/>
+                                    </> :
+                                <Link href="/login">로그인</Link>
+                            }
                         </article>
                     </div>
                 </PagePadding>

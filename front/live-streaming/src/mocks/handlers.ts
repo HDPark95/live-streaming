@@ -1,13 +1,12 @@
 import {http, HttpResponse, StrictResponse} from 'msw'
-import {faker} from "@faker-js/faker";
 
 
 const User = [
-    {id: 'hyundoo', nickname: 'hyundoo'},
+    {id: '1', nickname: 'hyundoo', image: '', accessToken: "1234", refreshToken: "3456"},
 ]
 
 export const handlers = [
-    http.post('/api/login', () => {
+    http.post('/api/v1/login', () => {
         return HttpResponse.json(User[1])
     }),
 ];

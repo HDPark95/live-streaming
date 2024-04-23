@@ -20,12 +20,11 @@ export const {
                     throw new Error("No credentials provided");
                 }
                 try {
-                    const res = await fetch("http://localhost:8080/login", {
+                    const res = await fetch("http://localhost:9090/api/v1/login", {
                         method: 'POST',
                         body: JSON.stringify(credentials),
                         headers: {"Content-Type": "application/json"}
                     })
-                    console.log(res);
                     if (!res.ok) {
                         throw new Error("Login failed");
                     }
@@ -37,7 +36,6 @@ export const {
                         username: credentials.username, // 예시로 사용자 이름 설정
                         id: credentials.username, // 예시로 사용자 이름 설정
                     };
-                    console.log("authentication", user);
                     return {
                         id: 1,
                         name: credentials.username,
@@ -50,8 +48,11 @@ export const {
         })
     ],
     callbacks: {
+        async jwt({token, user}) {
+            return token;
+        },
         async session({ session, user, token }) {
-            return session
+            return session;
         },
     }
 })
